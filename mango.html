@@ -1,25 +1,82 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+-->
 <head>
   <title>🥭 ManGO 🥭</title>
+  
   <!--
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥭</text></svg>">
   -->
   <link rel="icon" href="data:image/svg+xml><text>🥭</text></svg>
   <link rel="stylesheet" href="darkmode.css">
+
+  <script src="https://unpkg.com/htmx.org@2.0.1"></script>
+
+  <style>
+    #displayedImage {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
 </head>
 <body>
   <h1>🥭</h1>
-  <form action="/images" method="get">
-            <label for="url">URL:</label><br>
-            <input type="text" id="url" name="url"><br>
+  <div id="images-target">
+  <form hx-get="/images" hx-target="#images-target">
+    <label for="url">URL:</label><br>
+    <input type="text" id="url" name="url"><br>
 
-            <input type="checkbox" id="http" name="protocol" value="http">
-            <label for="http">HTTP</label><br>
-            <!--<input type="checkbox" id="https" name="protocol" value="https">-->
-            <!--<label for="https">HTTPS</label><br>-->
+    <input type="checkbox" id="http" name="protocol" value="http">
+    <label for="http">HTTP</label><br>
+    <!--<input type="checkbox" id="https" name="protocol" value="https">-->
+    <!--<label for="https">HTTPS</label><br>-->
 
-            <input type="checkbox" id="www" name="www" value="www">
-            <label for="www">WWW</label><br>
+    <input type="checkbox" id="www" name="www" value="www">
+    <label for="www">WWW</label><br>
 
-            <input type="submit" value="Fetch Images">
-        </form>
+    <input type="submit" value="Fetch Images">
+  </form>
+      <script>
+        document.getElementById('imageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const urlInput = document.getElementById('url').value;
+            const protocol = document.getElementById('http').checked ? 'http://' : 'https://';
+            const www = document.getElementById('www').checked ? 'www.' : '';
+            const url = protocol + www + urlInput;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const images = Array.from(doc.querySelectorAll('img')).map(img => img.src);
+                    displayImages(images);
+                })
+                .catch(error => console.error('Error fetching images:', error));
+        });
+
+        function displayImages(images) {
+            let currentImageIndex = 0;
+
+            function nextImage() {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                document.getElementById('displayedImage').src = images[currentImageIndex];
+            }
+
+            if (images.length > 0) {
+                let displayedImage = document.getElementById('displayedImage');
+                if (!displayedImage) {
+                    displayedImage = document.createElement('img');
+                    displayedImage.id = 'displayedImage';
+                    displayedImage.style.width = '100%';
+                    displayedImage.style.height = '100vh';
+                    document.body.appendChild(displayedImage);
+                }
+                displayedImage.src = images[0];
+                document.body.onclick = nextImage;
+            }
+        }
+    </script>
 </body>
