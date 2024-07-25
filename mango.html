@@ -23,7 +23,7 @@
 <body>
   <h1>🥭</h1>
   <div id="images-target">
-  <form hx-get="/images" hx-target="#images-target">
+  <form id="images-form" hx-get="/images" hx-target="#images-target">
     <label for="url">URL:</label><br>
     <input type="text" id="url" name="url"><br>
 
@@ -38,7 +38,7 @@
     <input type="submit" value="Fetch Images">
   </form>
       <script>
-        document.getElementById('imageForm').addEventListener('submit', function(event) {
+        document.getElementById('images-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
             const urlInput = document.getElementById('url').value;
