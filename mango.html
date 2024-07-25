@@ -46,7 +46,7 @@
             const https = document.getElementById('https').checked ? 'https://' : '';
             const protocol = http + https
             const www = document.getElementById('www').checked ? 'www.' : '';
-            const website = protocol + www + urlInput;
+            const website = protocol + www + url;
 
             fetch(website)
                 .then(response => response.text())
