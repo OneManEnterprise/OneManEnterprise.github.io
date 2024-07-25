@@ -29,8 +29,8 @@
 
     <input type="checkbox" id="http" name="protocol" value="http">
     <label for="http">HTTP</label><br>
-    <!--<input type="checkbox" id="https" name="protocol" value="https">-->
-    <!--<label for="https">HTTPS</label><br>-->
+    <input type="checkbox" id="https" name="protocol" value="https">
+    <label for="https">HTTPS</label><br>
 
     <input type="checkbox" id="www" name="www" value="www">
     <label for="www">WWW</label><br>
@@ -41,12 +41,14 @@
         document.getElementById('images-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const urlInput = document.getElementById('url').value;
-            const protocol = document.getElementById('http').checked ? 'http://' : 'https://';
+            const url = document.getElementById('url').value;
+            const http = document.getElementById('http').checked ? 'http://' : '';
+            const https = document.getElementById('https').checked ? 'https://' : '';
+            const protocol = http + https
             const www = document.getElementById('www').checked ? 'www.' : '';
-            const url = protocol + www + urlInput;
+            const website = protocol + www + urlInput;
 
-            fetch(url)
+            fetch(website)
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
