@@ -47,8 +47,9 @@
             const protocol = http + https
             const www = document.getElementById('www').checked ? 'www.' : '';
             const website = protocol + www + url;
-
-            fetch(website)
+            const proxy = 'https://corsproxy.io/?'
+            const proxiedWebsite = proxy + encodeURIComponent(website);
+            fetch(proxiedWebsite)
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
