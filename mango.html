@@ -19,6 +19,15 @@
       height: 100vh;
     }
   </style>
+  <style>
+    #images-form {
+        transition: transform 0.5s ease-in-out;
+        transform: translateX(0);
+    }
+    .hidden {
+        transform: translateX(-100%);
+    }
+</style>
 </head>
 <body>
   <h1>🥭</h1>
@@ -81,5 +90,23 @@
                 document.body.onclick = nextImage;
             }
         }
+    </script>
+    <script>
+        let startX;
+
+        document.body.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+
+        document.body.addEventListener('touchmove', function(e) {
+            let touch = e.touches[0];
+            let change = startX - touch.clientX;
+
+            if (change > 50) { // Swipe left
+                document.getElementById('images-form').classList.add('hidden');
+            } else if (change < -50) { // Swipe right
+                document.getElementById('images-form').classList.remove('hidden');
+            }
+        });
     </script>
 </body>
